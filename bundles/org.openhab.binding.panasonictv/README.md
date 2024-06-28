@@ -1,94 +1,62 @@
-# PanasonicTV Binding
+# Panasonic TV Binding
 
-_Give some details about what this binding is meant for - a protocol, system, specific device._
-
-_If possible, provide some resources like pictures (only PNG is supported currently), a video, etc. to give an impression of what can be done with this binding._
-_You can place such resources into a `doc` folder next to this README.md._
-
-_Put each sentence in a separate line to improve readability of diffs._
+This binding integrates the [Panasonic TV's](http://www.panasonic.com).
 
 ## Supported Things
 
-_Please describe the different supported things / devices including their ThingTypeUID within this section._
-_Which different types are supported, which models were tested etc.?_
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/OH-INF/thing``` of your binding._
+Panasonic Viera TV (E6), models should be supported.
+Panasonic TVs does not support full UPNP standard functionalities
+Volume and Mute status are updated in real time
+Most of the control is provided by sending Key Code to RemoteControl API
 
-- `bridge`: Short description of the Bridge, if any
-- `sample`: Short description of the Thing with the ThingTypeUID `sample`
+Source Name (read only) is updated when a Key Code to change the source is sent to tv, otherwise it is Undefined
+
+
+Tested TV models:
+
+| Model         | State   | Notes                                                                                |
+|---------------|---------|--------------------------------------------------------------------------------------|
+| Viera E6      | OK      | Initial contribution is done by this model                                           |
+| TX-40CX680    | OK      | Initial contribution is done by this model                                           |
+
 
 ## Discovery
 
-_Describe the available auto-discovery features here._
-_Mention for what it works and what needs to be kept in mind when using it._
+The TV's are discovered through UPnP protocol in the local network and all devices are put in the Inbox.
+UPnP must be enabled in the TV settings via the "Network -> TV Remote App Settings -> TV Remote: ON". This may be different on other models.  
+Optional: "Network Standby: ON" and "Powered On by Apps: ON" can be set to enable power on via the binding. 
 
 ## Binding Configuration
 
-_If your binding requires or supports general configuration settings, please create a folder ```cfg``` and place the configuration file ```<bindingId>.cfg``` inside it._
-_In this section, you should link to this file and provide some information about the options._
-_The file could e.g. look like:_
-
-```
-# Configuration for the PanasonicTV Binding
-#
-# Default secret key for the pairing of the PanasonicTV Thing.
-# It has to be between 10-40 (alphanumeric) characters.
-# This may be changed by the user for security reasons.
-secret=openHABSecret
-```
-
-_Note that it is planned to generate some part of this based on the information that is available within ```src/main/resources/OH-INF/binding``` of your binding._
-
-_If your binding does not offer any generic configurations, you can remove this section completely._
+The binding does not require any special configuration.
 
 ## Thing Configuration
 
-_Describe what is needed to manually configure a thing, either through the UI or via a thing-file._
-_This should be mainly about its mandatory and optional configuration parameters._
+The Panasonic TV Thing requires the UPNP UDN of the RemoteController and MediaRenderer as a configuration value in order for the binding to know how to access it. Panasonic TV publish several UPnP devices and the manufacturer and service names are used to recognize those UPnP devices.
+Additionally, a refresh interval can be configured in milliseconds to specify how often TV resources are polled.
 
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/OH-INF/thing``` of your binding._
+E.g.
 
-### `sample` Thing Configuration
-
-| Name            | Type    | Description                           | Default | Required | Advanced |
-|-----------------|---------|---------------------------------------|---------|----------|----------|
-| hostname        | text    | Hostname or IP address of the device  | N/A     | yes      | no       |
-| password        | text    | Password to access the device         | N/A     | yes      | no       |
-| refreshInterval | integer | Interval the device is polled in sec. | 600     | no       | yes      |
+```
+Thing panasonictv:tv:livingroom [ remoteControllerUdn="4D454930-0200-1000-8001-A813742A3472", mediaRendererUdn="4D454930-0100-1000-8001-A813742A3472", refreshInterval=1000 ]
+```
 
 ## Channels
 
-_Here you should provide information about available channel types, what their meaning is and how they can be used._
+TVs support the following channels:
 
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/OH-INF/thing``` of your binding._
+| Channel Type ID  | Item Type | Description                                                                                             |
+|------------------|-----------|---------------------------------------------------------------------------------------------------------|
+| volume           | Dimmer    | Volume level of the TV.                                                                                 |
+| mute             | Switch    | Mute state of the TV.                                                                                                                  |
+| sourceName       | String    | Name of the current source. Readonly, updated blindly when keyCode to change input is sent                                                                          |
+| sourceId         | Number    | Id of the current source.                                                                               |
+| keyCode          | String    | The key code channel emulates the infrared remote controller and allows to send virtual button presses. |
 
-| Channel | Type   | Read/Write | Description                 |
-|---------|--------|------------|-----------------------------|
-| control | Switch | RW         | This is the control channel |
+E.g.
 
-## Full Example
-
-_Provide a full usage example based on textual configuration files._
-_*.things, *.items examples are mandatory as textual configuration is well used by many users._
-_*.sitemap examples are optional._
-
-### Thing Configuration
-
-```java
-Example thing configuration goes here.
 ```
-### Item Configuration
-
-```java
-Example item configuration goes here.
+Dimmer  TV_Volume   { channel="panasonictv:tv:livingroom:volume" }
+Switch  TV_Mute     { channel="panasonictv:tv:livingroom:mute" }
+String  TV_KeyCode  { channel="panasonictv:tv:livingroom:keyCode" }
 ```
-
-### Sitemap Configuration
-
-```perl
-Optional Sitemap configuration goes here.
-Remove this section, if not needed.
-```
-
-## Any custom content here!
-
-_Feel free to add additional sections for whatever you think should also be mentioned about your binding!_

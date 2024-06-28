@@ -16,19 +16,29 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.core.thing.ThingTypeUID;
 
 /**
- * The {@link PanasonicTVBindingConstants} class defines common constants, which are
- * used across the whole binding.
+ * The {@link PanasonicTvBindingConstants} class defines common constants, which are used
+ * across the whole binding.
  *
- * @author Phillip Cao - Initial contribution
+ * @author Prakashbabu Sidaraddi - Initial contribution
  */
 @NonNullByDefault
-public class PanasonicTVBindingConstants {
+public class PanasonicTvBindingConstants {
 
-    private static final String BINDING_ID = "panasonictv";
+    public static final String BINDING_ID = "panasonictv";
 
-    // List of all Thing Type UIDs
-    public static final ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
+    public static final ThingTypeUID THING_TYPE_PANASONICTV = new ThingTypeUID(BINDING_ID, "tv");
 
-    // List of all Channel ids
-    public static final String CHANNEL_1 = "channel1";
+    public static final String CONFIG_REMOTECONTROLLER_UDN = "remoteControllerUdn";
+    public static final String CONFIG_MEDIARENDERER_UDN = "mediaRendererUdn";
+    public static final String PROPERTY_SERIAL = "serialNumber";
+
+    // List of all remote controller thing channel id's
+    public static final String KEY_CODE = "keyCode";
+    public static final String POWER = "power";
+    public static final String SOURCE_NAME = "sourceName";
+    public static final String SOURCE_ID = "sourceId";
+
+    // List of all media renderer thing channel id's
+    public static final String VOLUME = "volume";
+    public static final String MUTE = "mute";
 }
